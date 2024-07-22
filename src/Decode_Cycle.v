@@ -1,18 +1,3 @@
-// Copyright 2023 MERL-DSU
-
-//    Licensed under the Apache License, Version 2.0 (the "License");
-//    you may not use this file except in compliance with the License.
-//    You may obtain a copy of the License at
-
-//        http://www.apache.org/licenses/LICENSE-2.0
-
-//    Unless required by applicable law or agreed to in writing, software
-//    distributed under the License is distributed on an "AS IS" BASIS,
-//    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-//    See the License for the specific language governing permissions and
-//    limitations under the License.
-
-
 module decode_cycle(clk, rst, InstrD, PCD, PCPlus4D, RegWriteW, RDW, ResultW, RegWriteE, ALUSrcE, MemWriteE, ResultSrcE,
     BranchE,  ALUControlE, RD1_E, RD2_E, Imm_Ext_E, RD_E, PCE, PCPlus4E, RS1_E, RS2_E);
 
@@ -27,13 +12,11 @@ module decode_cycle(clk, rst, InstrD, PCD, PCPlus4D, RegWriteW, RDW, ResultW, Re
     output [4:0] RS1_E, RS2_E, RD_E;
     output [31:0] PCE, PCPlus4E;
 
-    // Declare Interim Wires
     wire RegWriteD,ALUSrcD,MemWriteD,ResultSrcD,BranchD;
     wire [1:0] ImmSrcD;
     wire [2:0] ALUControlD;
     wire [31:0] RD1_D, RD2_D, Imm_Ext_D;
 
-    // Declaration of Interim Register
     reg RegWriteD_r,ALUSrcD_r,MemWriteD_r,ResultSrcD_r,BranchD_r;
     reg [2:0] ALUControlD_r;
     reg [31:0] RD1_D_r, RD2_D_r, Imm_Ext_D_r;
@@ -41,8 +24,6 @@ module decode_cycle(clk, rst, InstrD, PCD, PCPlus4D, RegWriteW, RDW, ResultW, Re
     reg [31:0] PCD_r, PCPlus4D_r;
 
 
-    // Initiate the modules
-    // Control Unit
     Control_Unit_Top control (
                             .Op(InstrD[6:0]),
                             .RegWrite(RegWriteD),
@@ -56,7 +37,6 @@ module decode_cycle(clk, rst, InstrD, PCD, PCPlus4D, RegWriteW, RDW, ResultW, Re
                             .ALUControl(ALUControlD)
                             );
 
-    // Register File
     Register_File rf (
                         .clk(clk),
                         .rst(rst),
@@ -69,14 +49,12 @@ module decode_cycle(clk, rst, InstrD, PCD, PCPlus4D, RegWriteW, RDW, ResultW, Re
                         .RD2(RD2_D)
                         );
 
-    // Sign Extension
     Sign_Extend extension (
                         .In(InstrD[31:0]),
                         .Imm_Ext(Imm_Ext_D),
                         .ImmSrc(ImmSrcD)
                         );
 
-    // Declaring Register Logic
     always @(posedge clk or negedge rst) begin
         if(rst == 1'b0) begin
             RegWriteD_r <= 1'b0;
@@ -112,7 +90,6 @@ module decode_cycle(clk, rst, InstrD, PCD, PCPlus4D, RegWriteW, RDW, ResultW, Re
         end
     end
 
-    // Output asssign statements
     assign RegWriteE = RegWriteD_r;
     assign ALUSrcE = ALUSrcD_r;
     assign MemWriteE = MemWriteD_r;
