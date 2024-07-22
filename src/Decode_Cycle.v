@@ -1,7 +1,6 @@
 module decode_cycle(clk, rst, InstrD, PCD, PCPlus4D, RegWriteW, RDW, ResultW, RegWriteE, ALUSrcE, MemWriteE, ResultSrcE,
     BranchE,  ALUControlE, RD1_E, RD2_E, Imm_Ext_E, RD_E, PCE, PCPlus4E, RS1_E, RS2_E);
 
-    // Declaring I/O
     input clk, rst, RegWriteW;
     input [4:0] RDW;
     input [31:0] InstrD, PCD, PCPlus4D, ResultW;
